@@ -72,7 +72,7 @@ After saving your changes in `nano`, simply refresh the Nginx web page in your b
 
 ---
 
-## Creating docker image 
+## Creating nginx docker image 
 
 1. Create a new directory on your local machine, for example, named `my-nginx-profile`.
     ```bash
@@ -82,14 +82,25 @@ After saving your changes in `nano`, simply refresh the Nginx web page in your b
  
 3. Create a `Dockerfile` in `my-nginx-profile` with the following content:
     ```
-    FROM nginx
-    COPY index.html /usr/share/nginx/html
+   
+# which image
+FROM nginx
+
+# what to copy
+COPY index.html /usr/share/nginx/html/
+# port 80
+EXPOSE 80
+# cmd specific instructions
+CMD ["nginx", "-g", "daemon off;"]
+
     ```
 4. Build the Docker image:
     ```bash
-    docker build -t your-docker-username/my-nginx-profile:latest .
+    docker build -t aneesasif/ngingx-254 .
     ```
 ![](building.PNG)
+
+`docker run -d -p 80:80 aneesasif/ngingx-254`
 
 ### Push to Docker Hub
 1. Log in to Docker Hub from the command line if you haven't already:
@@ -104,3 +115,47 @@ After saving your changes in `nano`, simply refresh the Nginx web page in your b
 Replace `your-docker-username` with the username you chose when you created your Docker account. Now your customized Nginx image will be available on Docker Hub, and you can pull it or run containers from it on any machine.
 
 ![](push.PNG)
+
+
+## Creating an App Using Docker
+
+Start by creating a folder named `app` and place your Sparta test application inside. Also, make sure to include a Dockerfile with the following content:
+
+```Dockerfile
+FROM node:latest
+WORKDIR /app
+COPY . .
+RUN npm install
+EXPOSE 3000
+CMD [ "node", "app.js" ]
+```
+
+To build the Docker image, navigate to the directory containing your Dockerfile and run the following command. This will save the image as `sparta-app`:
+
+```bash
+docker build -t sparta-app .
+```
+
+![Building the Sparta App](sparta_app.PNG)
+
+To run the image, map port 3000 of the container to port 3000 of your host machine:
+
+```bash
+docker run -d -p 3000:3000 sparta-app
+```
+
+You should now be able to access the application running on your local host at port 3000.
+
+![Sparta App Running](sparta_running.png)
+
+To push your Docker image to Docker Hub, run the following command:
+
+```bash
+docker push aneesasif/sparta-app
+```
+
+The image should now be uploaded to your Docker Hub account.
+
+![Pushed App to Docker Hub](pushed-app.PNG)
+
+---

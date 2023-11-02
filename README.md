@@ -81,8 +81,8 @@ After saving your changes in `nano`, simply refresh the Nginx web page in your b
 2. Create a file named index.html enter what you want.
  
 3. Create a `Dockerfile` in `my-nginx-profile` with the following content:
-    ```
    
+```
 # which image
 FROM nginx
 
@@ -92,8 +92,8 @@ COPY index.html /usr/share/nginx/html/
 EXPOSE 80
 # cmd specific instructions
 CMD ["nginx", "-g", "daemon off;"]
+```
 
-    ```
 4. Build the Docker image:
     ```bash
     docker build -t aneesasif/ngingx-254 .
